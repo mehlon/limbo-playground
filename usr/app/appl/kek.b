@@ -63,7 +63,7 @@ send(g: ref Private_info, cgidata: ref CgiData )
 
 		while(cgidata.form!=nil){
 			(tag, val) := hd cgidata.form;
-			g.bout.puts(sys->sprint("<I>%s", "hey"));
+			g.bout.puts(sys->sprint("<I>%s", "output: "));
 			g.bout.puts("</I>");
 			if (tag == "code"){
 				fd = sys->create(filename, Sys->OWRITE, 8r666 );
@@ -78,12 +78,37 @@ send(g: ref Private_info, cgidata: ref CgiData )
 			cgidata.form = tl cgidata.form;
 		}
 
-		sh := load Sh Sh->PATH;
 		disfile := play + ".dis";
 		cmd := load Command "/dis/limbo.dis";
 		cmd->init(nil, "limbo" :: "-o" :: disfile :: filename :: nil);
 
-		g.bout.puts(sh->run(nil, disfile :: ">" :: "/fd/1" :: nil));
+		# TODO: use a pipe instead
+		if (0) {
+		fds := array[2] of ref Sys->FD;
+		if(sys->pipe(fds) < 0){
+			err(g, sys->sprint("sh: can't make pipe: %r\n"));
+		}
+		fd0 := "/fd/" + sys->sprint("%d", fds[0].fd);
+		err(g, "fd="+fd0);
+		spawn run(disfile :: ">" :: fd0 :: nil);
+		}
+
+		out := play + ".out";
+		sh := load Sh Sh->PATH;
+		# see $home/dis/do
+		err(g, sh->run(nil, "/dis/do" :: disfile :: out :: nil));
+		fd = sys->open(out, Sys->OREAD);
+		if(fd == nil)
+			err(g, sys->sprint("cannot open %s: %r", out));
+
+
+		buf := array[Sys->ATOMICIO] of byte;
+		n := 0;
+		if((n = sys->read(fd, buf, len buf)) > 0) {
+
+		}
+
+		g.bout.puts(string buf[0:n]);
 		#fd := sys->fildes(0)
 		#buf := array[Sys->ATOMICIO] of byte;
 		#n := 0;
@@ -114,6 +139,13 @@ send(g: ref Private_info, cgidata: ref CgiData )
 	g.bout.puts("</body>\n");
 	g.bout.flush();
 }
+
+run(argv: list of string)
+{
+	sh := load Sh Sh->PATH;
+	sh->run(nil, argv);
+}
+
 
 err(g: ref Private_info, s: string)
 {

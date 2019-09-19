@@ -1,0 +1,3 @@
+#!/dis/sh
+echo $args
+$1 > $2

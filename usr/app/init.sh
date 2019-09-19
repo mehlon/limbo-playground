@@ -1,10 +1,13 @@
-#/dis/sh
-port=`{os sh -c 'echo $PORT'}
+#!/dis/sh
+load std
 
 home=/usr/app
-mkdir /tmp
+if {~ $1 sh} {
+	port=8080
+	{cd $home; cd appl; limbo kek.b}
+} { port=`{os sh -c 'echo $PORT'} }
 
-memfs
+#memfs
 bind -b /usr/app/appl /dis/svc/httpd
 bind -a /usr/app/dis /dis
 bind -a /usr/app/httpd /services/httpd
