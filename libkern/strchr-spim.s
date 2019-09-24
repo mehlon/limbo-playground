@@ -1,1 +1,0 @@
-#include "strchr-mips.s"

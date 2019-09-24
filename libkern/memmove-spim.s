@@ -1,1 +1,0 @@
-#include "memmove-mips.s"

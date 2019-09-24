@@ -1,2 +1,0 @@
-#!/dis/sh
-ls -p $* | mc
