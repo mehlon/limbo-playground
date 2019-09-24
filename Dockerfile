@@ -9,5 +9,5 @@ COPY . $INFERNO/usr/app
 WORKDIR $INFERNO/usr/app
 RUN cd appl; limbo *.b
 
-CMD ["emu", "sh", "/usr/app/init.sh"]
+CMD ["emu", "/usr/app/init.sh"]
 
