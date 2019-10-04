@@ -89,13 +89,13 @@ send(g: ref Private_info, cgidata: ref CgiData )
 
 		# TODO: use a pipe instead
 		if (0) {
-		fds := array[2] of ref Sys->FD;
-		if(sys->pipe(fds) < 0){
-			err(g, sys->sprint("sh: can't make pipe: %r\n"));
-		}
-		fd0 := "/fd/" + sys->sprint("%d", fds[0].fd);
-		err(g, "fd="+fd0);
-		spawn run(disfile :: ">" :: fd0 :: nil);
+            fds := array[2] of ref Sys->FD;
+            if(sys->pipe(fds) < 0){
+                err(g, sys->sprint("sh: can't make pipe: %r\n"));
+            }
+            fd0 := "/fd/" + sys->sprint("%d", fds[0].fd);
+            err(g, "fd="+fd0);
+            spawn run(disfile :: ">" :: fd0 :: nil);
 		}
 
 		out := play + ".out";

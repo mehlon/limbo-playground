@@ -1,11 +1,12 @@
 #!/dis/sh
 load std
 
+bind -c '#U*'/workspace/limbo-playground /usr/app
 home=/usr/app
-if {~ $1 sh} {
-	port=8080
-	{cd $home; cd appl; limbo kek.b}
-} { port=`{os sh -c 'echo $PORT'} }
+if {! ftest -f -s /env/port} {
+	port=`{os sh -c 'echo -n $PORT'}
+}
+{cd $home/appl; limbo kek.b}
 
 #memfs
 bind -b /usr/app/appl /dis/svc/httpd
